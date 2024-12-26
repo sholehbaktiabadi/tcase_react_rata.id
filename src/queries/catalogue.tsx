@@ -15,3 +15,12 @@ export const DELETE_CATALOGUE = gql`
         deleteOneCatalogue(id: $deleteOneCatalogueId)
     }
 `
+
+export const CREATE_CATALOGGUE = gql`
+    mutation CreateOneCatalogue($dto: CreateCatalogueDto!) {
+        createOneCatalogue(dto: $dto) {
+            name
+            category
+        }
+    }
+`
