@@ -24,3 +24,9 @@ export const CREATE_CATALOGGUE = gql`
         }
     }
 `
+
+export const UPDATE_CATALOGGUE = gql`
+mutation UpdateCatalogue($dto: UpdateCatalogueDto!, $updateCatalogueId: Float!) {
+    updateCatalogue(dto: $dto, id: $updateCatalogueId)
+  }
+`
