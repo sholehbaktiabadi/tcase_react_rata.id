@@ -2,14 +2,12 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button
 import { useMutation, useQuery } from '@apollo/client';
 import { CREATE_CATALOGGUE, DELETE_CATALOGUE, GET_CATALOGUE, UPDATE_CATALOGGUE } from "./queries/catalogue";
 import { useEffect, useState } from "react";
-interface Catalogue {
-  id: number
-  name: string
-  category: string
-}
+import { Catalogue } from "./interface/catalogue";
+
 function App() {
   const [name, setName] = useState("")
   const [category, setCategory] = useState("")
+  const [itemPrice, setPrice] = useState(0)
   const [updateTarget, setUpdateTarget] = useState(0)
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { isOpen: isUpdateOpen, onOpen: onUpdateOpen, onOpenChange: onUpdateOpenChange } = useDisclosure();
@@ -25,14 +23,14 @@ function App() {
   }
 
   const onSubmitCreate = async () => {
-    await createCatalogue({ variables: { dto: { name, category } } })
+    await createCatalogue({ variables: { dto: { name, category, price: itemPrice } } })
     setName("")
     setCategory("")
     window.location.reload()
   }
 
   const onSubmitUpdate = async (id: number) => {
-    await updateCatalogue({ variables: { dto: { name, category }, updateCatalogueId: parseFloat(id.toString()) } })
+    await updateCatalogue({ variables: { dto: { name, category, price: itemPrice }, updateCatalogueId: parseFloat(id.toString()) } })
     setName("")
     setCategory("")
     setUpdateTarget(0)
@@ -57,6 +55,7 @@ function App() {
                 <ModalHeader className="flex flex-col gap-1"><p>Create</p></ModalHeader>
                 <ModalBody>
                   <Input onChange={(e) => setName(e.target.value)} label="name" type="text" />
+                  <Input onChange={(e) => setPrice(+e.target.value)} label="price" type="number" />
                   <Input onChange={(e) => setCategory(e.target.value)} label="category" type="text" />
                 </ModalBody>
                 <ModalFooter>
@@ -78,14 +77,16 @@ function App() {
               <TableColumn>ID</TableColumn>
               <TableColumn>NAME</TableColumn>
               <TableColumn>CATEGORY</TableColumn>
+              <TableColumn>PRICE</TableColumn>
               <TableColumn>ACTION</TableColumn>
             </TableHeader>
             <TableBody>
-              {catalogues.map(({ id, name, category }) =>
+              {catalogues.map(({ id, name, category, price }) =>
                 <TableRow key={id}>
                   <TableCell className="text-slate-500">{id}</TableCell>
                   <TableCell className="text-slate-500">{name}</TableCell>
                   <TableCell className="text-slate-500">{category}</TableCell>
+                  <TableCell className="text-slate-500">{price}</TableCell>
                   <TableCell className="text-slate-500">
                     <Button color="warning" className="mr-2" onPress={() => { setUpdateTarget(id); onUpdateOpen() }}>Update</Button>
                     <Modal isOpen={isUpdateOpen} onOpenChange={onUpdateOpenChange}>
@@ -95,6 +96,7 @@ function App() {
                             <ModalHeader className="flex flex-col gap-1"><p>Update</p></ModalHeader>
                             <ModalBody>
                               <Input onChange={(e) => setName(e.target.value)} label="name" type="text" />
+                              <Input onChange={(e) => setPrice(+e.target.value)} label="price" type="number" />
                               <Input onChange={(e) => setCategory(e.target.value)} label="category" type="text" />
                             </ModalBody>
                             <ModalFooter>

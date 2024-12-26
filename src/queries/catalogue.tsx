@@ -6,6 +6,7 @@ export const GET_CATALOGUE = gql`
             id
             name
             category
+            price
         }
     }
 `;
@@ -21,6 +22,7 @@ export const CREATE_CATALOGGUE = gql`
         createOneCatalogue(dto: $dto) {
             name
             category
+            price
         }
     }
 `
